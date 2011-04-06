@@ -1,0 +1,15 @@
+name: View Site
+id:   ViewSite
+key:  viewsite
+version: 0.1
+author_link: https://alfasado.net/
+author_name: Alfasado Inc.
+l10n_class: ViewSite::L10N
+description: <__trans phrase="Add view site link to Your Dashboard and System Menu.">
+config_settings:
+    DefaultWebSiteURL:
+callbacks:
+    MT::App::CMS::pre_run: $viewsite::ViewSite::Plugin::_pre_run
+    MT::App::CMS::template_source.header: $viewsite::ViewSite::Plugin::_header_source
+    MT::App::CMS::template_param: $viewsite::ViewSite::Plugin::_tmpl_param
+    MT::App::CMS::template_param.cfg_system_general: $viewsite::ViewSite::Plugin::_cfg_system_general
