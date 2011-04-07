@@ -5,15 +5,16 @@ use strict;
 sub _tmpl_param {
     my ( $cb, $app, $param, $tmpl ) = @_;
     return if ( $app->blog );
-    my $website_url = MT->config( 'DefaultWebSiteURL' );
-    if (! $website_url ) {
+    my $default_website_url = MT->config( 'DefaultWebSiteURL' );
+    if (! $default_website_url ) {
         my $param;
         if ( MT->version_number >= 5 ) {
             $param = { class => 'website' };
         }
-        $website_url = MT::Blog->load( $param, { limit => 1 } )->site_url;
+        $default_website_url = MT::Blog->load( $param, { limit => 1 } )->site_url;
     }
-    $param->{ website_url } = $website_url;
+    _set_default( $app, $default_website_url );
+    $param->{ website_url } = $default_website_url;
 }
 
 sub _header_source {
@@ -56,12 +57,17 @@ sub _pre_run {
             $app->return_to_dashboard( permission => 1 );
         }
         if ( my $default_website_url = $app->param( 'default_website_url' ) ) {
-            my $cfg = $app->config;
-            $app->config( 'DefaultWebSiteURL', $default_website_url || undef, 1 );
-            $cfg->save_config();
+            _set_default( $app, $default_website_url );
         }
     }
     return 1;
+}
+
+sub _set_default {
+    my ( $app, $default_website_url ) = @_;
+    my $cfg = $app->config;
+    $app->config( 'DefaultWebSiteURL', $default_website_url || undef, 1 );
+    $cfg->save_config();
 }
 
 1;
