@@ -52,7 +52,7 @@ MTML
 
 sub _pre_run {
     my $app = MT->instance;
-    if ( $app->param( '__mode' ) eq 'save_cfg_system_general' ) {
+    if ( $app->mode eq 'save_cfg_system_general' ) {
         if (! $app->user->is_superuser ) {
             $app->return_to_dashboard( permission => 1 );
         }
